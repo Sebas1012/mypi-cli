@@ -1,14 +1,12 @@
-import subprocess
-import time
-import click
+import psutil
 
 def get_cpu_temperature():
-    result = subprocess.run(['sensors'], capture_output=True)
-    output = result.stdout.decode('utf-8')
-    temperature = output.splitlines()[2].split()[1].strip('°C')
-    return temperature
-
-while True:
-    cpu_temperature = get_cpu_temperature()
-    click.echo(f"CPU Temperature: {cpu_temperature} °C")
-    time.sleep(5)
+    temps = psutil.sensors_temperatures()
+    if not temps:
+        return "No se encontraron sensores de temperatura."
+    
+    for name, entries in temps.items():
+        for entry in entries:
+            if entry.label == 'Package id 0' or not entry.label:
+                return f"Temperatura de la CPU: {entry.current} °C"
+    return "No se encontró la temperatura de la CPU."

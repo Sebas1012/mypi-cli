@@ -1,5 +1,5 @@
 from colorama import init, Fore
-from .temp import get_cpu_temperature
+from src.temp import get_cpu_temperature
 import click
 import os
 
@@ -11,5 +11,5 @@ def cli():
 
 @cli.command()
 def temp():
-    get_cpu_temperature()
+    click.echo(get_cpu_temperature())
     
